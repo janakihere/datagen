@@ -3,10 +3,7 @@ package com.galatea.generatea;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.galatea.generatea.Generators.BigDecimalLimitedNormalGenerator;
-import com.galatea.generatea.Generators.DistributionType;
-import com.galatea.generatea.Generators.Generator;
-import com.galatea.generatea.Generators.ListSelectionGenerator;
+import com.galatea.generatea.Generators.*;
 
 public class Attribute {
 
@@ -18,24 +15,27 @@ public class Attribute {
 	private boolean hasDist;
 	private boolean hasPredefined;
 	private boolean hasPattern;
-	
+	private Attribute dependantOn;
+	private String dependancyExpression;
 	
 	public Attribute(String name, Type type, DistributionType disType,
-			Pattern regexp, List<String> values) {
+			Pattern regexp, List<String> values,Attribute dependantOn,String exp) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.disType = disType;
 		this.regexp = regexp;
 		this.values = values;
+		this.dependantOn=dependantOn;
+		this.dependancyExpression=exp;
 		
-		if(disType.equals(null)){
+		if(disType == null){
 			hasDist = false;
 		}
-		if(regexp.equals(null)){
+		if(regexp == null){
 			hasPattern = false;
 		}
-		if(values.equals(null)){
+		if(values == null){
 			hasPredefined = false;
 		}
 
@@ -90,17 +90,44 @@ public class Attribute {
 	}
 	
 	public Generator Generator(){
-		if(hasPattern){
+		if(hasPredefined){
 		   	return new ListSelectionGenerator(values);
 		} else if(hasPattern) {
 			return new RegexStringGenerator(regexp);
 		} else if(hasDist && type == Type.BigDecimal) {
 			return new BigDecimalLimitedNormalGenerator();
 		} else if(!hasDist && type == Type.BigDecimal) {
-			return new BigDecimalLimitedUniformGenerator();
+			return new BigDecimalLimitedNormalGenerator();
+			//return new BigDecimalLimitedUniformGenerator();
 		} else if(hasDist && type == Type.Int){
+			return new IntegerLimitedNormalGenerator();
 		} else if(!hasDist && type == Type.Int){
-		} else if()
+			return new IntegerLimitedNormalGenerator();
+			//return new IntegerLimitedUniformGenerator();
+		} else if(type == Type.Boolean){
+			return new BooleanGenerator();
+		} else if(type == Type.String){
+			return new RegexStringGenerator();
 		}
-	
+		
+		throw new IllegalArgumentException();
+	}
+	public boolean isHasPredefined() {
+		return hasPredefined;
+	}
+	public void setHasPredefined(boolean hasPredefined) {
+		this.hasPredefined = hasPredefined;
+	}
+	public Attribute getDependantOn() {
+		return dependantOn;
+	}
+	public void setDependantOn(Attribute dependantOn) {
+		this.dependantOn = dependantOn;
+	}
+	public String getDependancyExpression() {
+		return dependancyExpression;
+	}
+	public void setDependancyExpression(String dependancyExpression) {
+		this.dependancyExpression = dependancyExpression;
+	}
 }
