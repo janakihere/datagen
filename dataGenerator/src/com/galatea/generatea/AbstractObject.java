@@ -1,33 +1,39 @@
 package com.galatea.generatea;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AbstractObject{
   ArrayList<Attribute> attributes;
-  private int numAttributes;
+  private int numInstances;
+  List<AbstractObject> children;
   String name;
   
-  public AbstractObject(String n, ArrayList<Attribute> a){
+  public AbstractObject(String n, ArrayList<Attribute> a,int numOfInstances,ArrayList<AbstractObject> ch){
     name = n;
 	attributes = a;
-	numAttributes = a.size();
+	children = ch;
+	numInstances = numOfInstances;
   }
   
   public AbstractObject(){
     name = "default";
 	attributes = new ArrayList();
-	numAttributes = 0;
+	children = new ArrayList();
+	numInstances = 0;
   }
   
-  public AbstractObject(String n){
+  public AbstractObject(String n,int numOfInstances){
     name = n;
 	attributes = new ArrayList();
-	numAttributes = 0;
+	children = new ArrayList();
+	numOfInstances = 0;
   }
   
-  public AbstractObject(ArrayList<Attribute> a){
+  public AbstractObject(ArrayList<Attribute> a,int numOfInstances,ArrayList<AbstractObject> ch){
     name = "default";
 	attributes = a;
-	numAttributes = a.size();
+	children = ch;
+	numInstances = numOfInstances;
   }
   
   public void setName(String n){
@@ -36,20 +42,37 @@ public class AbstractObject{
   
   public void setAttributes(ArrayList<Attribute> a){
     attributes = a;
-	numAttributes = a.size();
   }
   
   public void clearAttributes(){
     attributes.clear();
-	numAttributes = 0;
+    numInstances = 0;
   }
   
   public void addAttribute(Attribute a){
     attributes.add(a);
-    numAttributes++;
   }
   
-  public String toString(){
+  public List<AbstractObject> getChildren() {
+	return children;
+}
+
+public void setChildren(List<AbstractObject> children) {
+	this.children = children;
+}
+public void addAChild(AbstractObject c){
+    children.add(c);
+  }
+
+public int getNumInstances() {
+	return numInstances;
+}
+
+public void setNumInstances(int numInstances) {
+	this.numInstances = numInstances;
+}
+
+public String toString(){
     StringBuilder sb = new StringBuilder(name +  "(AbstractObject): \n");
 	for(Attribute a : attributes){
 	  sb.append("\t");
