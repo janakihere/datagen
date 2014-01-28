@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import com.galatea.generatea.Generators.*;
 
 public class Attribute {
+	
 
 	private String name;
 	private Type type;
