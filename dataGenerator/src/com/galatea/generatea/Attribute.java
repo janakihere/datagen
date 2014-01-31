@@ -11,16 +11,15 @@ public class Attribute {
 	private String name;
 	private Type type;
 	private DistributionType disType;
-	private Pattern regexp;
+	private String regexp;
 	private List<String> values;
 	private boolean hasDist;
 	private boolean hasPredefined;
-	private boolean hasPattern;
 	private Attribute dependantOn;
 	private String dependancyExpression;
 	
 	public Attribute(String name, Type type, DistributionType disType,
-			Pattern regexp, List<String> values,Attribute dependantOn,String exp) {
+			String regexp, List<String> values,Attribute dependantOn,String exp) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -33,9 +32,7 @@ public class Attribute {
 		if(disType == null){
 			hasDist = false;
 		}
-		if(regexp == null){
-			hasPattern = false;
-		}
+
 		if(values == null){
 			hasPredefined = false;
 		}
@@ -59,10 +56,10 @@ public class Attribute {
 	public void setDisType(DistributionType disType) {
 		this.disType = disType;
 	}
-	public Pattern getRegexp() {
+	public String getRegexp() {
 		return regexp;
 	}
-	public void setRegexp(Pattern regexp) {
+	public void setRegexp(String regexp) {
 		this.regexp = regexp;
 	}
 	public List<String> getValues() {
@@ -83,18 +80,10 @@ public class Attribute {
 	public void sethasPredefined(boolean hasPredefined) {
 		this.hasPredefined = hasPredefined;
 	}
-	public boolean isHasPattern() {
-		return hasPattern;
-	}
-	public void setHasPattern(boolean hasPattern) {
-		this.hasPattern = hasPattern;
-	}
 	
 	public Generator Generator(){
 		if(hasPredefined){
 		   	return new ListSelectionGenerator(values);
-		} else if(hasPattern) {
-			return new RegexStringGenerator(regexp);
 		} else if(hasDist && type == Type.BigDecimal) {
 			return new BigDecimalLimitedNormalGenerator();
 		} else if(!hasDist && type == Type.BigDecimal) {
@@ -108,7 +97,7 @@ public class Attribute {
 		} else if(type == Type.Boolean){
 			return new BooleanGenerator();
 		} else if(type == Type.String){
-			return new RegexStringGenerator();
+			return new RegexStringGenerator(regexp);
 		}
 		
 		throw new IllegalArgumentException();
