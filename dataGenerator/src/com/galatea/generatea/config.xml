@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tree>
+  <AccountGroup maxOccurs="100">
+  <String name="ID" dist="normal" regexp="" loww="">abs.txt</String>
+  </AccountGroup>
+</Tree>
