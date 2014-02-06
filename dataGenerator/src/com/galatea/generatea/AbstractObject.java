@@ -77,6 +77,14 @@ public class AbstractObject {
 		this.numInstances = numInstances;
 	}
 
+	public ArrayList<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder(name + "(AbstractObject): \n");
 		for (Attribute a : attributes) {

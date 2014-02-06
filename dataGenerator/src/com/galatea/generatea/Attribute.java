@@ -1,9 +1,14 @@
 package com.galatea.generatea;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
-import com.galatea.generatea.Generators.*;
+import com.galatea.generatea.Generators.BigDecimalLimitedNormalGenerator;
+import com.galatea.generatea.Generators.BooleanGenerator;
+import com.galatea.generatea.Generators.DistributionType;
+import com.galatea.generatea.Generators.Generator;
+import com.galatea.generatea.Generators.IntegerLimitedNormalGenerator;
+import com.galatea.generatea.Generators.ListSelectionGenerator;
+import com.galatea.generatea.Generators.RegexStringGenerator;
 
 public class Attribute {
 	
@@ -15,8 +20,8 @@ public class Attribute {
 	private List<String> values;
 	private boolean hasDist;
 	private boolean hasPredefined;
-	private Attribute dependantOn;
-	private String dependancyExpression;
+	private Attribute dependentOn;
+	private String dependencyExpression;
 	
 	public Attribute(String name, Type type, DistributionType disType,
 			String regexp, List<String> values,Attribute dependantOn,String exp) {
@@ -26,8 +31,8 @@ public class Attribute {
 		this.disType = disType;
 		this.regexp = regexp;
 		this.values = values;
-		this.dependantOn=dependantOn;
-		this.dependancyExpression=exp;
+		this.dependentOn=dependantOn;
+		this.dependencyExpression=exp;
 		
 		if(disType == null){
 			hasDist = false;
@@ -109,15 +114,15 @@ public class Attribute {
 		this.hasPredefined = hasPredefined;
 	}
 	public Attribute getDependantOn() {
-		return dependantOn;
+		return dependentOn;
 	}
 	public void setDependantOn(Attribute dependantOn) {
-		this.dependantOn = dependantOn;
+		this.dependentOn = dependantOn;
 	}
 	public String getDependancyExpression() {
-		return dependancyExpression;
+		return dependencyExpression;
 	}
 	public void setDependancyExpression(String dependancyExpression) {
-		this.dependancyExpression = dependancyExpression;
+		this.dependencyExpression = dependancyExpression;
 	}
 }
