@@ -18,8 +18,8 @@ public class Attribute {
 	private DistributionType disType;
 	private String regexp;
 	private List<String> values;
-	private boolean hasDist;
-	private boolean hasPredefined;
+	private boolean isHasDist;
+	private boolean isHasPredefined;
 	private Attribute dependentOn;
 	private String dependencyExpression;
 	
@@ -35,11 +35,11 @@ public class Attribute {
 		this.dependencyExpression=exp;
 		
 		if(disType == null){
-			hasDist = false;
+			isHasDist = false;
 		}
 
 		if(values == null){
-			hasPredefined = false;
+			isHasPredefined = false;
 		}
 
 	}
@@ -73,30 +73,30 @@ public class Attribute {
 	public void setValues(List<String> values) {
 		this.values = values;
 	}
-	public boolean isHasDist() {
-		return hasDist;
+	public boolean isDistributed() {
+		return isHasDist;
 	}
 	public void setHasDist(boolean hasDist) {
-		this.hasDist = hasDist;
+		this.isHasDist = hasDist;
 	}
-	public boolean ishasPredefined() {
-		return hasPredefined;
+	public boolean isPredefined() {
+		return isHasPredefined;
 	}
 	public void sethasPredefined(boolean hasPredefined) {
-		this.hasPredefined = hasPredefined;
+		this.isHasPredefined = hasPredefined;
 	}
 	
 	public Generator Generator(){
-		if(hasPredefined){
+		if(isHasPredefined){
 		   	return new ListSelectionGenerator(values);
-		} else if(hasDist && type == Type.BigDecimal) {
+		} else if(isHasDist && type == Type.BigDecimal) {
 			return new BigDecimalLimitedNormalGenerator();
-		} else if(!hasDist && type == Type.BigDecimal) {
+		} else if(!isHasDist && type == Type.BigDecimal) {
 			return new BigDecimalLimitedNormalGenerator();
 			//return new BigDecimalLimitedUniformGenerator();
-		} else if(hasDist && type == Type.Int){
+		} else if(isHasDist && type == Type.Int){
 			return new IntegerLimitedNormalGenerator();
-		} else if(!hasDist && type == Type.Int){
+		} else if(!isHasDist && type == Type.Int){
 			return new IntegerLimitedNormalGenerator();
 			//return new IntegerLimitedUniformGenerator();
 		} else if(type == Type.Boolean){
@@ -106,12 +106,6 @@ public class Attribute {
 		}
 		
 		throw new IllegalArgumentException();
-	}
-	public boolean isHasPredefined() {
-		return hasPredefined;
-	}
-	public void setHasPredefined(boolean hasPredefined) {
-		this.hasPredefined = hasPredefined;
 	}
 	public Attribute getDependantOn() {
 		return dependentOn;
