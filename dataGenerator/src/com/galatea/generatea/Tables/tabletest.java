@@ -29,17 +29,17 @@ public static void main(){
   symlist.add("BUTTS");
   symlist.add("LOL");
   
-  alist.add(new Attribute("id_int", Type.Int, DistributionType.NORMAL, null, null));
-  alist.add(new Attribute("price", Type.BigDecimal, DistributionType.NORMAL, null, null));
-  alist.add(new Attribute("symbol", Type.String, null, null, symlist));
-  alist.add(new Attribute("somebool", Type.Boolean, null, null, null));
-  
-  ArrayList<Generator> genlist = new ArrayList(alist.size());
-  for(Attribute a : alist){
-	  Generator g = a.Generator();
-	  g.fieldName(a.getName())
-  }
-  
+//  alist.add(new Attribute("id_int", Type.Int, DistributionType.NORMAL, null, null));
+//  alist.add(new Attribute("price", Type.BigDecimal, DistributionType.NORMAL, null, null, null, null));
+//  alist.add(new Attribute("symbol", Type.String, null, null, symlist));
+//  alist.add(new Attribute("somebool", Type.Boolean, null, null, null));
+//  
+//  ArrayList<Generator> genlist = new ArrayList(alist.size());
+//  for(Attribute a : alist){
+//	  Generator g = a.Generator();
+//	  g.fieldName(a.getName())
+//  }
+//  
   for(int i = 0; i < 10; i++){
 	  
   }
