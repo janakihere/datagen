@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,16 +22,28 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.galatea.generatea.Generators.DistributionType;
+import com.galatea.generatea.Generators.Generator;
 import com.galatea.generatea.Tables.AttributeValue.AttributeVal;
 import com.google.common.collect.HashBasedTable;
 
 public class GeneratorManager {
 
 	// Table will sit here
+	Map<String,HashBasedTable> tablesGenerated = new HashMap<String,HashBasedTable>();
 	HashBasedTable<String, String, AttributeVal> table;
 	AttributeVal<AbstractObject> a;
 	AbstractObject objectTree = new AbstractObject();
 
+	public void generateTree(){
+		HashBasedTable<Integer, String, AttributeVal> table = HashBasedTable.create();
+		for(int i =1;i<= objectTree.getNumInstances();i++){
+			for(Attribute a :objectTree.getAttributes()){
+				Generator g = a.Generator();
+				table.put(i, a.getName(), g.generateAttributeVal());
+			}
+		}
+		tablesGenerated.put(objectTree.getName(), table);
+	}
 	public void readFromConfigFile() {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -90,7 +104,7 @@ public class GeneratorManager {
 					Attribute a = null;
 					if (c.getNodeName() == "String") {
 						String name = cElement.getAttribute("name");
-						String regexp = cElement.getAttribute("regexp");
+						String regexp = cElement.getAttribute("regex");
 						String preDefined = cElement
 								.getAttribute("pre-defined");
 						List<String> predefinedVals = null;
@@ -162,11 +176,19 @@ public class GeneratorManager {
 		obj.setAttributes(attr);
 	}
 
+	private void printOutput(){
+		for(HashBasedTable<Integer, String, AttributeVal> s:tablesGenerated.values()){
+			System.out.println(s.get(3, "ID").getStringValue());
+		}
+	}
 	public static void main(String args[]) {
 		GeneratorManager s = new GeneratorManager();
 		// read from config file into internal structure
 		s.readFromConfigFile();
 		// generate table
+		s.generateTree();
+		//System.out.println(table.);
+		s.printOutput();
 		// ooutput file
 	}
 }
