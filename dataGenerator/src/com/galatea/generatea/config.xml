@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tree>
   <AccountGroup maxOccurs="100">
-  	<String name="ID" regex="\S" lengthOfString ="5" pre-defined="abc.txt"></String>
+  	<String name="ID" regex="\S" lengthOfString ="5" pre-defined="list.txt"></String>
   <Account maxOccurs="5" distribution="normal">
   	<String name="ID" regex="\S" lengthOfString ="5"></String>
   	<int name="rate" dist="normal" lowerBound="2" upperBound="5" percentOutlying="2"></int>

@@ -18,7 +18,7 @@ public class tabletest{
 			Pattern regexp, List<String> values
  */
 public static void main(){
-  HashBasedTable<String, String, AttributeVal> table = HashBasedTable.create();
+  HashBasedTable<String, Attribute, AttributeVal> table = HashBasedTable.create();
   ArrayList<Attribute> alist = new ArrayList();
   ArrayList<String> symlist = new ArrayList(7);
   symlist.add("IBM");

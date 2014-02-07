@@ -1,8 +1,12 @@
 package com.galatea.generatea;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,15 +30,13 @@ public class GeneratorManager {
 	AttributeVal<AbstractObject> a;
 	AbstractObject objectTree = new AbstractObject();
 
-
 	public void readFromConfigFile() {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db
-					.parse(new File(
-							"C:/Users/Janaki/git/datagen_final/dataGenerator/src/com/galatea/generatea/config.xml"));
+			Document doc = db.parse(new File(
+					"src/com/galatea/generatea/config.xml"));
 			NodeList tree = doc.getElementsByTagName("Tree");
 			for (int s = 0; s < tree.getLength(); s++) {
 				Node mainObject = tree.item(s);
@@ -89,12 +91,30 @@ public class GeneratorManager {
 					if (c.getNodeName() == "String") {
 						String name = cElement.getAttribute("name");
 						String regexp = cElement.getAttribute("regexp");
-						String preDefined = cElement.getAttribute("pre-defined");
-						if(preDefined != "" || preDefined != null){
-							//read from file and set into list of strings
+						String preDefined = cElement
+								.getAttribute("pre-defined");
+						List<String> predefinedVals = null;
+						if (preDefined != "" && preDefined != null) {
+							// read from file and set into list of strings
+							BufferedReader br;
+							String fileName = "src/com/galatea/generatea/"+preDefined;
+							try {
+								br = new BufferedReader(new FileReader(fileName));
+								String currLine;
+								predefinedVals = new ArrayList<String>();
+								while ((currLine = br.readLine()) != null) {
+									predefinedVals.add(currLine);
+								}
+							} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 						a = new Attribute(name, Type.String, null, null, null,
-								null, regexp, null, null, null);
+								null, regexp, predefinedVals, null, null);
 						attr.add(a);
 					} else if (c.getNodeName() == "int") {
 						String name = cElement.getAttribute("name");
@@ -124,6 +144,7 @@ public class GeneratorManager {
 						String name = cElement.getAttribute("name");
 						a = new Attribute(name, Type.Boolean, null, null, null,
 								null, null, null, null, null);
+						attr.add(a);
 					}
 				} else {
 					AbstractObject child = new AbstractObject();
@@ -143,9 +164,9 @@ public class GeneratorManager {
 
 	public static void main(String args[]) {
 		GeneratorManager s = new GeneratorManager();
-		//read from config file into internal structure
+		// read from config file into internal structure
 		s.readFromConfigFile();
 		// generate table
-		//ooutput file
+		// ooutput file
 	}
 }
