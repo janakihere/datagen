@@ -3,6 +3,7 @@ package com.galatea.generatea.Generators;
 import nl.flotsam.xeger.Xeger;
 
 import com.galatea.generatea.Tables.AttributeValue.AttributeVal;
+import com.galatea.generatea.Tables.AttributeValue.StringVal;
 
 public class RegexStringGenerator extends Generator<String> {
 
@@ -25,7 +26,7 @@ public class RegexStringGenerator extends Generator<String> {
 	@Override
 	public AttributeVal<String> generateAttributeVal() {
 		// TODO Auto-generated method stub
-		return null;
+		return new StringVal(generate());
 	}
 
 }
