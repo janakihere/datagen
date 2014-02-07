@@ -17,13 +17,16 @@ public class Attribute {
 	private Type type;
 	private DistributionType disType;
 	private String regexp;
+	private Double lowerBound;
+	private Double upperBound;
+	private Double percentOutlying; 
 	private List<String> values;
 	private boolean isHasDist;
 	private boolean isHasPredefined;
 	private Attribute dependentOn;
 	private String dependencyExpression;
 	
-	public Attribute(String name, Type type, DistributionType disType,
+	public Attribute(String name, Type type, DistributionType disType,Double lb,Double ub,Double po,
 			String regexp, List<String> values,Attribute dependantOn,String exp) {
 		super();
 		this.name = name;
@@ -33,7 +36,9 @@ public class Attribute {
 		this.values = values;
 		this.dependentOn=dependantOn;
 		this.dependencyExpression=exp;
-		
+		this.lowerBound = lb;
+		this.upperBound= ub;
+		this.percentOutlying= po;
 		if(disType == null){
 			isHasDist = false;
 		}
@@ -110,13 +115,31 @@ public class Attribute {
 	public Attribute getDependantOn() {
 		return dependentOn;
 	}
-	public void setDependantOn(Attribute dependantOn) {
-		this.dependentOn = dependantOn;
+	public void setDependentOn(Attribute dependentOn) {
+		this.dependentOn = dependentOn;
 	}
-	public String getDependancyExpression() {
+	public String getDependencyExpression() {
 		return dependencyExpression;
 	}
-	public void setDependancyExpression(String dependancyExpression) {
-		this.dependencyExpression = dependancyExpression;
+	public void setDependencyExpression(String dependencyExpression) {
+		this.dependencyExpression = dependencyExpression;
+	}
+	public Double getLowerBound() {
+		return lowerBound;
+	}
+	public void setLowerBound(Double lowerBound) {
+		this.lowerBound = lowerBound;
+	}
+	public Double getUpperBound() {
+		return upperBound;
+	}
+	public void setUpperBound(Double upperBound) {
+		this.upperBound = upperBound;
+	}
+	public Double getPercentOutlying() {
+		return percentOutlying;
+	}
+	public void setPercentOutlying(Double percentOutlying) {
+		this.percentOutlying = percentOutlying;
 	}
 }

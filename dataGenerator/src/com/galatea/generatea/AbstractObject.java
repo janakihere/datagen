@@ -8,7 +8,17 @@ public class AbstractObject {
 	private ArrayList<Attribute> attributes;
 	private int numInstances;
 	private List<AbstractObject> children;
+	public String getDistribution() {
+		return distribution;
+	}
+
+	public void setDistribution(String distribution) {
+		this.distribution = distribution;
+	}
+
 	private String name;
+	private String distribution;
+	
 
 	public AbstractObject(String n, ArrayList<Attribute> a, int numOfInstances,
 			ArrayList<AbstractObject> ch) {

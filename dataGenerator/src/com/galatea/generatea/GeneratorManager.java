@@ -1,10 +1,8 @@
 package com.galatea.generatea;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,127 +15,137 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.galatea.generatea.Generators.Generator;
+import com.galatea.generatea.Generators.DistributionType;
 import com.galatea.generatea.Tables.AttributeValue.AttributeVal;
-import com.galatea.generatea.Tables.AttributeValue.TableVal;
 import com.google.common.collect.HashBasedTable;
 
 public class GeneratorManager {
 
 	// Table will sit here
 	HashBasedTable<String, String, AttributeVal> table;
-	AttributeVal<AbstractObject> a ;
-	public void manageAttributeGeneration(AbstractObject parent){
-		//for each child generte the children
-		//alternate 
-		generateTree(parent);
-		
-		
-	}
-	
-	private HashBasedTable<Integer, String, AttributeVal> generateTree(AbstractObject obj){
-		HashBasedTable<Integer, String, AttributeVal> table = null;
-		HashBasedTable<Integer, String, AttributeVal> childTable = null;
-		for(int i=0;i<obj.getNumInstances();i++){
-			for(Attribute at: obj.getAttributes()){
-				Generator g = 	at.Generator();
-				AttributeVal a = g.generateAttributeVal();
-				table.put(i, at.getName(), a);
-			}
-			if(obj.getChildren().size() != 0){
-				for(AbstractObject child: obj.getChildren()){
-					childTable =  generateTree(child);
-					//table.put(i,child.getName(),childAttr);
-				}
-			}
-			AttributeVal<HashBasedTable> childAttr = new TableVal(childTable);
-			
-		}
-		return table;	
-	}
-	public void genereteFromXSD(){
+	AttributeVal<AbstractObject> a;
+	AbstractObject objectTree = new AbstractObject();
+
+
+	public void readFromConfigFile() {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new File("C:/Users/Janaki/git/datagen_final/dataGenerator/src/com/galatea/generatea/config.xml"));
-			List<AbstractObject> listObjs = new ArrayList<AbstractObject>();
-		    AbstractObject newObj = new AbstractObject();
-			System.out.println(doc.getDocumentElement().getNodeName());
-			newObj.setName(doc.getDocumentElement().getNodeName());
+			Document doc = db
+					.parse(new File(
+							"C:/Users/Janaki/git/datagen_final/dataGenerator/src/com/galatea/generatea/config.xml"));
+			NodeList tree = doc.getElementsByTagName("Tree");
+			for (int s = 0; s < tree.getLength(); s++) {
+				Node mainObject = tree.item(s);
+				if (mainObject.getNodeType() == Node.ELEMENT_NODE) {
+					Element mainObjectElement = (Element) mainObject;
+					NodeList nodeListChildren = mainObjectElement
+							.getChildNodes();
+					for (int j = 0; j < nodeListChildren.getLength(); j++) {
+						if (nodeListChildren.item(j).getNodeType() == Node.ELEMENT_NODE
+								&& nodeListChildren.item(j).hasChildNodes()) {
+							objectTree.setName(nodeListChildren.item(j)
+									.getNodeName());
+							Node n = nodeListChildren.item(j);
+							NamedNodeMap m = n.getAttributes();
+							objectTree.setNumInstances(Integer.parseInt(m
+									.getNamedItem("maxOccurs").getNodeValue()));
+							Element eachObjectElement = (Element) nodeListChildren
+									.item(j);
+							readAttributes(objectTree, eachObjectElement);
+						}
+					}
+					System.out.println(objectTree.getName());
+					for (Attribute attr : objectTree.getAttributes()) {
+						System.out.println(attr.getName());
+					}
+					for (AbstractObject obj : objectTree.getChildren()) {
+						System.out.println(obj.getName());
+					}
 
-            NodeList tree = doc.getElementsByTagName("Tree");
-            int totalTress = tree.getLength();
-            System.out.println("Total no of trees : " + totalTress);
+				}
 
-            for(int s=0; s<tree.getLength() ; s++){
-
-
-                Node mainObject = tree.item(s);
-                if(mainObject.getNodeType() == Node.ELEMENT_NODE){
-
-                	Element mainObjectElement = (Element)mainObject;
-                	System.out.println("---"+mainObjectElement.getNodeName());
-                    NodeList nodeListChildren = mainObjectElement.getChildNodes();
-                    for(int j=0;j<nodeListChildren.getLength();j++){
-                    	 if(nodeListChildren.item(j).getNodeType() == Node.ELEMENT_NODE 
-                    			 && nodeListChildren.item(j).hasChildNodes()){
-                    		 newObj.setName(nodeListChildren.item(j).getNodeName());
-                    		 Node n = nodeListChildren.item(j);
-                    		 NamedNodeMap m = n.getAttributes();
-                    		 newObj.setNumInstances(Integer.parseInt(m.getNamedItem("maxOccurs").getNodeValue()));
-                    		 System.out.println(m.getNamedItem("maxOccurs").getNodeValue());
-                    		 System.out.println("===="+nodeListChildren.item(j).getNodeName());
-                    		 Element eachObjectElement = (Element)nodeListChildren.item(j);
-                    		// eachObjectElement.get
-                             NodeList eachObjChildren = eachObjectElement.getChildNodes();
-                    		 for(int k =0;k<eachObjChildren.getLength();k++){
-                    			// System.out.println(eachObjChildren.item(k).getNodeType());
-                    			 if(eachObjChildren.item(k).getNodeType() == Node.ELEMENT_NODE && !eachObjChildren.item(k).hasChildNodes() ){
-                    				 //System.out.println(eachObjChildren.item(k).getNodeName());
-                    				 Node attr = eachObjChildren.item(k);
-//                    				 if(attr.getNodeName() == "String"){
-//                    					 Attribute a = new Attribute();
-//                    					 a.setType(Type.String);
-//                    					 a.setRegexp(attr.getAttributes().getNamedItem("regex"));
-//                    					 a.setlen(attr.getAttributes().getNamedItem("lengthOfString"));
-//                    				 } else if(attr.getNodeName() == "int"){
-//                    					 
-//                    				 }else if(attr.getNodeName() == "BigDecimal"){
-//                    					 
-//                    				 }
-                    				 
-                    			 }
-                    		 }
-                    	 }
-                    }
-                    //------
-
-
-                }//end of if clause
-
-
-            }//end of for loop with s var
-			//doc.getDocumentElement().set
+			}
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 	}
-	
-	public void getAttributes(AbstractObject obj){
-		
+
+	public void readAttributes(AbstractObject obj, Element e) {
+		ArrayList<Attribute> attr = new ArrayList<Attribute>();
+		NodeList eachObjChildren = e.getChildNodes();
+		for (int k = 0; k < eachObjChildren.getLength(); k++) {
+			Node c = eachObjChildren.item(k);
+			if (c.getNodeType() == Node.ELEMENT_NODE) {
+				Element cElement = (Element) c;
+				if (!cElement.hasChildNodes()) {
+					Attribute a = null;
+					if (c.getNodeName() == "String") {
+						String name = cElement.getAttribute("name");
+						String regexp = cElement.getAttribute("regexp");
+						String preDefined = cElement.getAttribute("pre-defined");
+						if(preDefined != "" || preDefined != null){
+							//read from file and set into list of strings
+						}
+						a = new Attribute(name, Type.String, null, null, null,
+								null, regexp, null, null, null);
+						attr.add(a);
+					} else if (c.getNodeName() == "int") {
+						String name = cElement.getAttribute("name");
+						String disType = cElement.getAttribute("dist");
+						String lb = cElement.getAttribute("lowerBound");
+						String ub = cElement.getAttribute("upperBound");
+						String po = cElement.getAttribute("percentOutlying");
+						a = new Attribute(name, Type.Int, Enum.valueOf(
+								DistributionType.class, disType.trim()
+										.toUpperCase()),
+								Double.parseDouble(lb), Double.parseDouble(ub),
+								Double.parseDouble(po), null, null, null, null);
+						attr.add(a);
+					} else if (c.getNodeName() == "BigDecimal") {
+						String name = cElement.getAttribute("name");
+						String disType = cElement.getAttribute("dist");
+						String lb = cElement.getAttribute("lowerBound");
+						String ub = cElement.getAttribute("upperBound");
+						String po = cElement.getAttribute("percentOutlying");
+						a = new Attribute(name, Type.BigDecimal, Enum.valueOf(
+								DistributionType.class, disType.trim()
+										.toUpperCase()),
+								Double.parseDouble(lb), Double.parseDouble(ub),
+								Double.parseDouble(po), null, null, null, null);
+						attr.add(a);
+					} else if (c.getNodeName() == "Boolean") {
+						String name = cElement.getAttribute("name");
+						a = new Attribute(name, Type.Boolean, null, null, null,
+								null, null, null, null, null);
+					}
+				} else {
+					AbstractObject child = new AbstractObject();
+					child.setName(cElement.getNodeName());
+					Element eachObjectElement = (Element) c;
+					child.setNumInstances(Integer.parseInt(eachObjectElement
+							.getAttribute("maxOccurs")));
+					child.setDistribution(eachObjectElement
+							.getAttribute("distribution"));
+					obj.addAChild(child);
+					readAttributes(child, eachObjectElement);
+				}
+			}
+		}
+		obj.setAttributes(attr);
 	}
-	public static void main(String args[]){
-		BufferedReader br = null;
+
+	public static void main(String args[]) {
 		GeneratorManager s = new GeneratorManager();
-		s.genereteFromXSD();
+		//read from config file into internal structure
+		s.readFromConfigFile();
+		// generate table
+		//ooutput file
 	}
 }
