@@ -182,13 +182,19 @@ public class GeneratorManager {
 		}
 	}
 	public static void main(String args[]) {
-		GeneratorManager s = new GeneratorManager();
+		/*GeneratorManager s = new GeneratorManager();
 		// read from config file into internal structure
 		s.readFromConfigFile();
 		// generate table
 		s.generateTree();
 		//System.out.println(table.);
 		s.printOutput();
-		// ooutput file
+		// ooutput file*/
+		double d = 4.2;
+		
+		//Long f = (Long)Math.ceil(d);
+		System.out.println(Double.valueOf(Math.ceil(d)).longValue());
+		
+		
 	}
 }
